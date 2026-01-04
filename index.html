@@ -1,81 +1,335 @@
 <!DOCTYPE html>
 <html lang="hu">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Sevilla Trip Countdown</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Visszaszámlálás Sevilla-ig – 2026.04.23 06:05" />
 
   <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      font-family: Arial, Helvetica, sans-serif;
-      color: white;
+    :root{
+      --glass: rgba(255,255,255,.14);
+      --glass2: rgba(255,255,255,.08);
+      --border: rgba(255,255,255,.22);
+      --shadow: 0 22px 70px rgba(0,0,0,.55);
+      --text: rgba(255,255,255,.94);
+      --muted: rgba(255,255,255,.72);
     }
 
-    body {
-      background-image: url("https://images.unsplash.com/photo-1548786817-2e5b6f3b2b52");
+    *{ box-sizing: border-box; }
+    html, body { height: 100%; }
+
+    body{
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      color: var(--text);
+      overflow: hidden;
+      background: #000;
+    }
+
+    /* Fullscreen Sevilla background */
+    .bg{
+      position: fixed; inset: 0;
+      background-image: url("https://images.unsplash.com/photo-1604014237800-1c9102c219da?auto=format&fit=crop&w=2400&q=80");
       background-size: cover;
       background-position: center;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
+      transform: scale(1.06);
+      filter: saturate(1.08) contrast(1.03);
+    }
+    .bg::after{
+      content:"";
+      position:absolute; inset:0;
+      background:
+        radial-gradient(1100px 700px at 20% 15%, rgba(0,0,0,.15), rgba(0,0,0,.62)),
+        radial-gradient(900px 600px at 85% 75%, rgba(0,0,0,.10), rgba(0,0,0,.62)),
+        linear-gradient(180deg, rgba(0,0,0,.20), rgba(0,0,0,.72));
+      backdrop-filter: blur(2px);
     }
 
-    .overlay {
-      background: rgba(0,0,0,0.55);
-      padding: 40px;
-      border-radius: 16px;
+    .wrap{
+      position: relative;
+      height: 100%;
+      display: grid;
+      place-items: center;
+      padding: 22px;
     }
 
-    h1 {
-      margin-bottom: 20px;
-      font-size: 42px;
+    .card{
+      width: min(980px, 100%);
+      border-radius: 28px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, var(--glass), var(--glass2));
+      box-shadow: var(--shadow);
+      padding: clamp(18px, 3vw, 34px);
+      backdrop-filter: blur(10px);
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before{
+      content:"";
+      position:absolute; inset:-80px;
+      background:
+        radial-gradient(closest-side at 25% 25%, rgba(255,255,255,.12), transparent 55%),
+        radial-gradient(closest-side at 80% 60%, rgba(255,255,255,.10), transparent 60%);
+      pointer-events:none;
     }
 
-    #timer {
-      font-size: 28px;
-      font-weight: bold;
+    .top{
+      position: relative;
+      z-index: 1;
+      display:flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      flex-wrap: wrap;
     }
+
+    h1{
+      margin: 0;
+      font-size: clamp(22px, 3.2vw, 44px);
+      letter-spacing: .2px;
+      line-height: 1.05;
+    }
+
+    .sub{
+      margin: 10px 0 0 0;
+      color: var(--muted);
+      max-width: 72ch;
+      font-size: 14.5px;
+      line-height: 1.35;
+    }
+
+    .pill{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.22);
+      background: rgba(0,0,0,.20);
+      color: rgba(255,255,255,.86);
+      font-size: 13px;
+      white-space: nowrap;
+    }
+    .dot{
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #7CFFB2;
+      box-shadow: 0 0 14px rgba(124,255,178,.55);
+    }
+
+    .grid{
+      position: relative;
+      z-index: 1;
+      margin-top: 22px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(120px, 1fr));
+      gap: 14px;
+    }
+    @media (max-width: 720px){
+      .grid{ grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .tile{
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(0,0,0,.26);
+      padding: 14px 14px 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    .tile::after{
+      content:"";
+      position:absolute; inset:0;
+      background: linear-gradient(120deg, rgba(255,255,255,.08), transparent 35%, transparent 65%, rgba(255,255,255,.06));
+      pointer-events:none;
+      opacity:.9;
+    }
+
+    .label{
+      font-size: 12px;
+      color: rgba(255,255,255,.72);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .value{
+      font-variant-numeric: tabular-nums;
+      font-size: clamp(34px, 6.2vw, 66px);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      position: relative;
+      z-index: 1;
+      display:flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+
+    .unit{
+      font-size: 14px;
+      color: rgba(255,255,255,.72);
+      font-weight: 650;
+      letter-spacing: .02em;
+    }
+
+    .bottom{
+      position: relative;
+      z-index: 1;
+      margin-top: 16px;
+      display:flex;
+      justify-content: space-between;
+      align-items:center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .hint{
+      color: rgba(255,255,255,.72);
+      font-size: 13px;
+    }
+
+    .btn{
+      cursor: pointer;
+      border: 1px solid rgba(255,255,255,.20);
+      background: rgba(0,0,0,.22);
+      color: rgba(255,255,255,.90);
+      padding: 10px 12px;
+      border-radius: 14px;
+      font-size: 13px;
+      user-select: none;
+      transition: transform .08s ease, background .2s ease;
+    }
+    .btn:hover{ background: rgba(0,0,0,.30); }
+    .btn:active{ transform: translateY(1px); }
+
+    .celebrate{
+      display:none;
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(124,255,178,.35);
+      background: rgba(124,255,178,.10);
+      position: relative;
+      z-index: 1;
+    }
+    .celebrate strong{ display:block; font-size: 15px; margin-bottom: 6px;}
+    .celebrate span{ color: rgba(255,255,255,.78); font-size: 13px;}
   </style>
 </head>
-<body>
 
-  <div class="overlay">
-    <h1>Sevilla Trip Countdown ✈️</h1>
-    <div id="timer">Betöltés…</div>
-  </div>
+<body>
+  <div class="bg" aria-hidden="true"></div>
+
+  <main class="wrap">
+    <section class="card" aria-live="polite">
+      <div class="top">
+        <div>
+          <h1>Sevilla Trip Countdown ✈️</h1>
+          <p class="sub">
+            Célidő: <strong>2026.04.23 · 06:05</strong> (Sevilla / Madrid idő).
+            Megnyitod bármikor, és élőben számol nap–óra–perc–másodperc pontossággal.
+          </p>
+        </div>
+        <div class="pill" title="CEST időzóna (UTC+2) – áprilisban">
+          <span class="dot"></span>
+          <span id="targetText">Cél: —</span>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="tile">
+          <div class="label">Nap</div>
+          <div class="value"><span id="d">—</span><span class="unit">d</span></div>
+        </div>
+        <div class="tile">
+          <div class="label">Óra</div>
+          <div class="value"><span id="h">—</span><span class="unit">h</span></div>
+        </div>
+        <div class="tile">
+          <div class="label">Perc</div>
+          <div class="value"><span id="m">—</span><span class="unit">m</span></div>
+        </div>
+        <div class="tile">
+          <div class="label">Másodperc</div>
+          <div class="value"><span id="s">—</span><span class="unit">s</span></div>
+        </div>
+      </div>
+
+      <div class="celebrate" id="celebrate">
+        <strong>INDULÁS! 🎉</strong>
+        <span>Sevilla vár. Jó utat nektek!</span>
+      </div>
+
+      <div class="bottom">
+        <div class="hint">Tipp: ha frissítesz (⌘R), ugyanúgy folytatja a pontos számolást.</div>
+        <div class="btn" id="fullscreen">Teljes képernyő</div>
+      </div>
+    </section>
+  </main>
 
   <script>
-    const targetDate = new Date("2026-04-23T06:05:00");
+    // Célidő: 2026-04-23 06:05 Sevilla/Madrid (áprilisban CEST = UTC+2).
+    // A legegyszerűbb és stabil: rögzített +02:00 offset.
+    const TARGET_ISO = "2026-04-23T06:05:00+02:00";
+    const targetDate = new Date(TARGET_ISO);
 
-    function updateCountdown() {
-      const now = new Date();
-      const diff = targetDate - now;
+    const elD = document.getElementById("d");
+    const elH = document.getElementById("h");
+    const elM = document.getElementById("m");
+    const elS = document.getElementById("s");
+    const celebrate = document.getElementById("celebrate");
+    const targetText = document.getElementById("targetText");
 
-      if (diff <= 0) {
-        document.getElementById("timer").innerHTML = "INDULÁS! 🎉";
-        return;
-      }
+    function pad2(n){ return String(n).padStart(2, "0"); }
 
-      const seconds = Math.floor(diff / 1000);
-      const days = Math.floor(seconds / 86400);
-      const hours = Math.floor((seconds % 86400) / 3600);
-      const minutes = Math.floor((seconds % 3600) / 60);
-      const secs = seconds % 60;
-
-      document.getElementById("timer").innerHTML =
-        days + " nap " +
-        hours + " óra " +
-        minutes + " perc " +
-        secs + " másodperc";
+    // Célidő kiírás (felhasználóbarát)
+    try{
+      const opts = { year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit" };
+      targetText.textContent = "Cél: " + new Intl.DateTimeFormat("hu-HU", opts).format(targetDate) + " (Sevilla)";
+    }catch(e){
+      targetText.textContent = "Cél: 2026.04.23 06:05 (Sevilla)";
     }
 
-    updateCountdown();
-    setInterval(updateCountdown, 1000);
-  </script>
+    function tick(){
+      const now = new Date();
+      let diff = targetDate.getTime() - now.getTime();
 
+      if(diff <= 0){
+        elD.textContent = "0";
+        elH.textContent = "00";
+        elM.textContent = "00";
+        elS.textContent = "00";
+        celebrate.style.display = "block";
+        return;
+      } else {
+        celebrate.style.display = "none";
+      }
+
+      const total = Math.floor(diff / 1000);
+      const days = Math.floor(total / 86400);
+      const hours = Math.floor((total % 86400) / 3600);
+      const mins  = Math.floor((total % 3600) / 60);
+      const secs  = total % 60;
+
+      elD.textContent = String(days);
+      elH.textContent = pad2(hours);
+      elM.textContent = pad2(mins);
+      elS.textContent = pad2(secs);
+    }
+
+    tick();
+    setInterval(tick, 1000);
+
+    // Fullscreen gomb (ha a böngésző engedi)
+    document.getElementById("fullscreen").addEventListener("click", () => {
+      const el = document.documentElement;
+      if (!document.fullscreenElement && el.requestFullscreen) el.requestFullscreen();
+      else if (document.fullscreenElement && document.exitFullscreen) document.exitFullscreen();
+    });
+  </script>
 </body>
 </html>
