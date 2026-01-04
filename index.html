@@ -36,15 +36,15 @@
       transform: scale(1.06);
       filter: saturate(1.08) contrast(1.03);
     }
-    .bg::after{
-      content:"";
-      position:absolute; inset:0;
-      background:
-        radial-gradient(1100px 700px at 20% 15%, rgba(0,0,0,.15), rgba(0,0,0,.62)),
-        radial-gradient(900px 600px at 85% 75%, rgba(0,0,0,.10), rgba(0,0,0,.62)),
-        linear-gradient(180deg, rgba(0,0,0,.20), rgba(0,0,0,.72));
-      backdrop-filter: blur(2px);
-    }
+    ..bg::after{
+  content:"";
+  position:absolute; inset:0;
+  background:
+    radial-gradient(1100px 700px at 20% 15%, rgba(0,0,0,.08), rgba(0,0,0,.40)),
+    radial-gradient(900px 600px at 85% 75%, rgba(0,0,0,.06), rgba(0,0,0,.40)),
+    linear-gradient(180deg, rgba(0,0,0,.10), rgba(0,0,0,.46));
+  backdrop-filter: blur(1px);
+}
 
     .wrap{
       position: relative;
@@ -231,7 +231,7 @@
           <h1>Sevilla Trip Countdown ✈️</h1>
           <p class="sub">
             Célidő: <strong>2026.04.23 · 06:05</strong> (Sevilla / Madrid idő).
-            Megnyitod bármikor, és élőben számol nap–óra–perc–másodperc pontossággal.
+            Erdőbe fát? Sivatagba homokot?
           </p>
         </div>
         <div class="pill" title="CEST időzóna (UTC+2) – áprilisban">
