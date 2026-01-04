@@ -52,16 +52,16 @@
     }
 
     .card{
-      width: min(980px, 100%);
-      border-radius: 28px;
-      border: 1px solid var(--border);
-      background: rgba(15, 15, 18, 0.42);
-      box-shadow: var(--shadow);
-      padding: clamp(18px, 3vw, 34px);
-      backdrop-filter: blur(8px);
-      position: relative;
-      overflow: hidden;
-    }
+  width: min(980px, 100%);
+  border-radius: 28px;
+  border: 1px solid rgba(255,255,255,.22);
+  background: rgba(10, 10, 12, 0.28); /* EZ A LÉNYEG */
+  box-shadow: 0 20px 50px rgba(0,0,0,.35);
+  padding: clamp(18px, 3vw, 34px);
+  backdrop-filter: blur(6px);
+  position: relative;
+  overflow: hidden;
+}
     .card::before{
       content:"";
       position:absolute; inset:-80px;
